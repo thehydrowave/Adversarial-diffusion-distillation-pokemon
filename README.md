@@ -1,4 +1,4 @@
-# Pokemon Generator avec Adversarial Diffusion Distillation
+# Naruto Generator avec Adversarial Diffusion Distillation
 
 ## Description
 Ce projet vise à générer de nouveaux Pokémon de manière rapide et stylisée en utilisant une approche avancée de compression de modèles de diffusion : **Adversarial Diffusion Distillation (ADD)**.
