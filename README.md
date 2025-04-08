@@ -1,55 +1,52 @@
 # Naruto Generator avec Adversarial Diffusion Distillation
 
 ## Description
-Ce projet vise à générer de nouveaux Pokémon de manière rapide et stylisée en utilisant une approche avancée de compression de modèles de diffusion : **Adversarial Diffusion Distillation (ADD)**.
-L'objectif est de réduire drastiquement le temps de génération tout en conservant une qualité d'image élevée, à partir de simples prompts textuels décrivant les caractéristiques du Pokémon.
+Ce projet vise à générer de nouvelles images stylisées de l’univers **Naruto** de manière rapide en utilisant une approche avancée de compression de modèles de diffusion : **Adversarial Diffusion Distillation (ADD)**.  
+L’objectif est de conserver la qualité artistique des personnages ou scènes tout en accélérant le temps de génération, à partir de simples prompts textuels.
 
 ## Objectifs
-- Finetuner un modèle de diffusion (ex. : **Stable Diffusion**) sur un dataset de Pokémon.
-- Entraîner un modèle *student* plus rapide via la méthode **ADD**.
-- Générer des Pokémon cohérents avec des prompts tels que *"dragon de feu aux ailes transparentes"*.
+- Finetuner un modèle de diffusion (ex. : **Stable Diffusion**) sur un dataset basé sur Naruto.
+- Entraîner un modèle *student* plus léger via la méthode **ADD**.
+- Générer des images cohérentes avec des prompts comme *"ninja aux cheveux blancs avec un bandeau rouge"*.
 
 ---
 
 ## Qu'est-ce que l'Adversarial Diffusion Distillation (ADD) ?
-L'**Adversarial Diffusion Distillation (ADD)** est une méthode introduite pour compresser et accélérer les modèles de diffusion tout en conservant leur qualité de génération.
-Elle repose sur trois piliers principaux :
-1. **Modèle teacher (enseignant)** : un modèle de diffusion pré-entraîné, performant mais lent.
-2. **Modèle student (étudiant)** : un modèle plus rapide, appris à générer des images similaires au teacher en moins d'étapes.
-3. **Discriminateur adversarial** : un réseau semblable à celui des GANs qui distingue les images du student de celles du teacher.
+L'**ADD** est une méthode pour compresser et accélérer les modèles de diffusion tout en conservant une qualité visuelle élevée.  
+Elle s'appuie sur :
+1. **Un modèle teacher** : modèle Stable Diffusion finetuné sur l’univers Naruto.
+2. **Un modèle student** : version plus rapide, distillée à partir du teacher.
+3. **Un discriminateur** : apprend à distinguer les images du student de celles du teacher.
 
-Le modèle *student* est entraîné à :
-- **Reproduire** fidèlement les sorties du *teacher* à différentes étapes de diffusion (**distillation**).
-- **Tromper** le discriminateur en produisant des images aussi réalistes que celles du *teacher* (**perte adversariale**).
-- **Réduire** le bruit de façon cohérente avec le processus de diffusion inverse.
-
-Cette combinaison permet d'obtenir un modèle *student* rapide, capable de générer des images de haute qualité en seulement quelques étapes de *sampling*.
+Le student est entraîné à :
+- **Imiter** les sorties du teacher à différentes étapes.
+- **Tromper** le discriminateur avec des images réalistes.
+- **Dénoyer** les latents en suivant le processus de diffusion inverse.
 
 ---
 
-## Dataset Pokémon
-Nous utilisons le dataset **"Pokémon BLIP Captions Dataset"** composé d'images issues des jeux et de fan art, accompagnées de descriptions textuelles générées automatiquement à l'aide du modèle **BLIP** (*Bootstrapped Language Image Pretraining*). 
+## Dataset Naruto
+Le dataset utilisé contient des images issues de l’univers Naruto (screenshots, fan arts, extraits de manga), accompagnées de **descriptions textuelles** générées ou annotées, décrivant les personnages, leurs actions ou leurs environnements.
 
-Ce dataset permet d'entraîner le modèle à comprendre des prompts tels que :
-- *"petit Pokémon rouge avec des ailes de feu"*
-- *"dragon aquatique géant bleu"*
-
-Le dataset est **nettoyé et filtré** pour garantir la cohérence image-description et peut être enrichi via **DreamBooth** ou **LoRA** pour capturer des styles artistiques spécifiques.
+Exemples de captions :
+- *"ninja en armure sombre lançant un shuriken"*
+- *"personnage blond avec des marques sur le visage et des vêtements orange"*
 
 ---
 
 ## Technologies utilisées
 - **Diffusers (Hugging Face)**
-- **PyTorch & PyTorch Lightning**
-- **Stable Diffusion (modèle teacher)**
+- **PyTorch**
+- **Stable Diffusion finetuné** (teacher)
+- **Modèle UNet réduit** (student)
 - **Discriminateur adversarial**
-- **CLIP (évaluation de cohérence texte-image)**
-- **Python**
+- **CLIP pour l’évaluation**
+- **Python (via Notebooks Jupyter)**
 
 ---
 
 ## Exemple de prompt
-*"Un Pokémon électrique en forme de loup, avec des éclairs bleus autour de lui."*
+*"Un ninja encapuchonné manipulant du feu bleu dans une forêt sombre."*
 
 ---
 
@@ -58,43 +55,44 @@ Le dataset est **nettoyé et filtré** pour garantir la cohérence image-descrip
 
 ---
 
-## Avantages de l'approche ADD
-- **Réduction significative du temps de génération** (jusqu'à 20x plus rapide).
-- **Moins de ressources nécessaires** pour l'inférence.
-- **Idéal pour les déploiements en temps réel** ou sur appareils à faible puissance.
-- **Possibilité de génération massive** de contenus avec peu de perte de qualité.
+## Avantages de l’approche ADD
+- Génération **jusqu’à 20x plus rapide** qu’un modèle classique.
+- Optimisé pour **inférence en temps réel** ou sur appareils avec peu de mémoire.
+- **Moins de coût de calcul** pour des performances visuelles proches du teacher.
 
 ---
 
 ## Pipeline d'entraînement
-1. **Prétraitement** du dataset Pokémon (nettoyage des images et association des captions).
-2. **Finetuning** de Stable Diffusion sur le dataset (*modèle teacher*).
-3. **Initialisation** du *modèle student* avec le même *backbone* que le teacher.
-4. **Entraînement adversarial** avec le discriminateur et la distillation de bruit.
-5. **Évaluation** de la qualité avec scores **FID** et **CLIP Similarity**.
-6. **Export et déploiement** du *modèle student* pour génération rapide.
+1. **Chargement** des images Naruto et de leurs captions.
+2. **Finetuning** de Stable Diffusion pour capturer le style Naruto (*modèle teacher*).
+3. **Construction** du modèle student (réduction du UNet).
+4. **Entraînement ADD** avec distillation + adversarial loss.
+5. **Visualisation** des sorties pour comparer student vs teacher.
+6. **Évaluation** avec **FID** et **CLIP Similarity**.
+7. **Export** du modèle student pour génération rapide.
 
 ---
 
 ## Évaluation de la qualité
-La qualité des Pokémon générés est évaluée à l'aide de plusieurs métriques :
-- **FID (Fréchet Inception Distance)** : mesure la similarité distributionnelle.
-- **CLIP Similarity Score** : compare le prompt et l'image générée.
-- **Évaluation humaine** : petit panel de testeurs.
+- **FID** : mesure la similarité de distribution entre vraies et générées.
+- **CLIP Similarity** : mesure la cohérence texte-image.
+- **Évaluations qualitatives** : inspection visuelle des résultats.
 
 ---
 
 ## Structure du projet
 ```
-pokemon-generator/
-├── data/               # Dataset Pokémon (images + captions)
+naruto-generator/
+├── data/                # Dataset Naruto (images + captions)
 ├── models/
-│   ├── teacher/       # Modèle Stable Diffusion finetuné
-│   └── student/       # Modèle distillé avec ADD
+│   ├── teacher/         # Stable Diffusion finetuné
+│   └── student/         # Modèle ADD distillé
+├── notebooks/
+│   ├── ADD_part2_Naruto_Project.ipynb   # Pipeline ADD avec visualisation
+│   └── Addgood1.ipynb                   # Expériences, tests ou variantes
 ├── training/
-│   ├── distillation.py # Script d'entraînement ADD
-│   ├── discriminator.py # Réseau adversarial
-│   └── losses.py       # Fonctions de pertes
-├── generate.py         # Génération à partir de prompts
-└── README.md           # Ce document
+│   ├── discriminator.py   # Discriminateur adversarial
+│   └── losses.py          # Fonctions de perte
+├── generate.py            # Génération à partir de prompts
+└── README.md              # Ce document
 ```
