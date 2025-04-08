@@ -83,16 +83,8 @@ Exemples de captions :
 ## Structure du projet
 ```
 naruto-generator/
-├── data/                # Dataset Naruto (images + captions)
-├── models/
-│   ├── teacher/         # Stable Diffusion finetuné
-│   └── student/         # Modèle ADD distillé
 ├── notebooks/
-│   ├── ADD_part2_Naruto_Project.ipynb   # Pipeline ADD avec visualisation
-│   └── Addgood1.ipynb                   # Expériences, tests ou variantes
-├── training/
-│   ├── discriminator.py   # Discriminateur adversarial
-│   └── losses.py          # Fonctions de perte
-├── generate.py            # Génération à partir de prompts
-└── README.md              # Ce document
+│   ├── Teacher.ipynb # Stable Diffusion finetune
+│   └── Student.ipynb # ADD model distill
+└── README.md         # Proposal
 ```
