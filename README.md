@@ -75,7 +75,7 @@ Exemples de captions :
 
 ## Évaluation de la qualité
 - **FID** : mesure la similarité de distribution entre vraies et générées.
-- **CLIP Similarity** : mesure la cohérence texte-image.
+- **LPIPS** : mesure la similarité perceptuelle entre les images du teacher et du student.
 - **Évaluations qualitatives** : inspection visuelle des résultats.
 
 ---
@@ -84,7 +84,22 @@ Exemples de captions :
 ```
 naruto-generator/
 ├── notebooks/
-│   ├── Teacher.ipynb # Stable Diffusion finetune
-│   └── Student.ipynb # ADD model distill
-└── README.md         # Proposal
-```
+│   ├── Teacher.ipynb                  # Finetuning de Stable Diffusion
+│   └── Student.ipynb                  # Distillation avec ADD
+├── helpers_teacher/
+│   ├── t_visual_utils.py
+│   ├── t_data_utils.py
+│   ├── t_inference.py
+│   ├── t_model_utils.py
+│   ├── t_train.py
+│   └── __init__.py
+├── helpers_student/
+│   ├── s_discriminator.py
+│   ├── s_metrics_utils.py
+│   ├── s_student_teacher_utils.py
+│   └── s_training_loop.py
+├── naruto_weights/
+│   ├── teacher_lora_weights.bin
+│   └── teacher_lora_weights_10step_1batch_64.bin
+├── Final_report.pdf                   # Finak written report
+└── README.md                          # Proposal
